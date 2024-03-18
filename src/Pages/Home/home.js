@@ -1,14 +1,14 @@
 import React from "react";
 import { TextField, Grid } from "@mui/material";
 import "./Home.css";
+import Header from "../../components/Header/header";
 
 function Home() {
-  return;
-  <Grid style={{ backgroundColor: "#05b0ec" }}>
-    {/* <header className="header">
-      <h1>My Header</h1>
-    </header> */}
-  </Grid>;
+  return (
+    <Grid>
+      <Header></Header>
+    </Grid>
+  );
 }
 
 export default Home;
