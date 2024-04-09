@@ -17,7 +17,7 @@ function Home() {
       <header
         className="header"
         style={{
-          marginLeft: "40%",
+          marginLeft: "43%",
         }}
       >
         <Grid container item direction={"row"}>
