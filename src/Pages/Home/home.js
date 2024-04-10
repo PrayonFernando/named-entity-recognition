@@ -1,102 +1,40 @@
-// import React from "react";
+import React, { useState } from "react";
 import { TextField, Grid, Button, Box } from "@mui/material";
 import { createStyles, makeStyles } from "@mui/styles"; // Updated import
 import Header from "../../components/Header/header";
 import { Dropzone, FileMosaic } from "@dropzone-ui/react";
 import { useNavigate } from "react-router-dom";
 import scourt from "../../assets/scourt.jpg";
-// const useStyles = makeStyles((theme) =>
-//   createStyles({
-//     homeContainer: {
-//       backgroundColor: "#f5f5f5",
-//       minHeight: "100vh",
-//       padding: 40,
-//       boxSizing: "border-box",
-//       display: "flex",
-//       flexDirection: "column",
-//       alignItems: "center",
-//       justifyContent: "center",
-//     },
-//     uploadArea: {
-//       backgroundColor: "white",
-//       borderRadius: 10,
-//       padding: 30,
-//       boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.15)",
-//       textAlign: "center",
-//     },
-//     submitButton: {
-//       marginTop: 20,
-//       backgroundColor: "#283d8f",
-//       color: "white",
-//       padding: "12px 20px",
-//       border: "none",
-//       borderRadius: 5,
-//       cursor: "pointer",
-//       transition: "background-color 0.3s ease",
-//       "&:hover": {
-//         backgroundColor: "#1a2b65",
-//       },
-//     },
-//   })
-// );
+import EntitiesDisplay from "../../components/Entities";
 
-// function Home() {
-//   const [files, setFiles] = React.useState([]);
-//   const navigate = useNavigate();
-//   const classes = useStyles();
-
-//   const updateFiles = (incommingFiles) => {
-//     setFiles(incommingFiles);
-//   };
-
-//   const handleSubmit = async () => {
-//     // ... Submission logic ...
-//     navigate("/Review");
-//   };
-
-//   return (
-//     <Grid
-//       container
-//       direction="column"
-//       alignItems="center"
-//       justifyContent="center"
-//       className={classes.homeContainer}
-//     >
-//       <Grid item>
-//         <Header />
-//       </Grid>
-//       <Grid
-//         item
-//         container
-//         justifyContent="center"
-//         className={classes.uploadArea}
-//       >
-//         <Dropzone onChange={updateFiles} value={files}>
-//           {files.map((file) => (
-//             <FileMosaic {...file} preview />
-//           ))}
-//         </Dropzone>
-//         <Button
-//           variant="contained"
-//           onClick={handleSubmit}
-//           className={classes.submitButton}
-//         >
-//           Submit
-//         </Button>
-//       </Grid>
-//     </Grid>
-//   );
-// }
-
-// export default Home;
-import React from "react";
 import MyDropzone from "../../components/MyDropzone";
 
 const Home = () => {
-  // Function to handle file upload
-  // You might want to adjust this to your needs
+  const [files, setFiles] = useState([]);
+  const [entities, setEntities] = useState([]);
+
   const handleSubmit = () => {
-    console.log("Handle the file upload here.");
+    const formData = new FormData();
+    files.forEach((file) => {
+      formData.append("file", file); // 'file' should match the expected field in your API
+    });
+
+    fetch("https://4708-35-221-11-174.ngrok-free.app/upload", {
+      // Replace 'your-api-endpoint' with the actual endpoint path
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Assuming your response structure has a typo "entites" instead of "entities"
+        const fetchedEntities = data.entites || []; // Adjust this line based on the correct property name
+        setEntities(fetchedEntities);
+        console.log("Success:", data);
+        // Here you might want to navigate the user to another page or display the extracted entities
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   return (
@@ -134,7 +72,7 @@ const Home = () => {
             height: "100%",
           }}
         >
-          <MyDropzone />
+          <MyDropzone files={files} setFiles={setFiles} />
         </div>
 
         <Button
@@ -150,6 +88,10 @@ const Home = () => {
           Submit
         </Button>
         {/* <p>Please upload the file in only .PDF format</p> */}
+      </div>
+
+      <div>
+        <EntitiesDisplay entities={entities} />
       </div>
     </div>
   );

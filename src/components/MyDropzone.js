@@ -1,25 +1,21 @@
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
-function MyDropzone() {
-  const [files, setFiles] = useState([]); // State to hold the selected files
-
+function MyDropzone({ files, setFiles }) {
   const onDrop = useCallback((acceptedFiles) => {
-    // Append the newly accepted files to the existing files
     setFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
   }, []);
+
+  const handleUpload = () => {
+    if (files.length === 0) {
+      console.log("No files selected.");
+      return;
+    }
+  };
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   // Function to handle file upload
-  const handleUpload = () => {
-    // Process the file upload here
-    // For demonstration, we'll just log the files to the console
-    console.log("Uploading files:", files);
-
-    // After processing (e.g., successful upload), you might want to clear the selected files
-    // setFiles([]);
-  };
 
   // Styles omitted for brevity...
 
